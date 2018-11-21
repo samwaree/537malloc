@@ -3,7 +3,8 @@
 
 typedef struct TreeNode TreeNode;
 
-void insert(TreeNode*, void*, size_t);
-void remove(TreeNode*, void*, size_t);
+TreeNode* createTree(void*, size_t);
+void insertNode(TreeNode*, void*, size_t);
+void removeNode(TreeNode*, void*, size_t);
 
 #endif
