@@ -32,7 +32,36 @@ TreeNode* createTree(void* ptr, size_t size) {
 }   
 
 void insertNode(TreeNode* tree, void* ptr, size_t size) {
+    if(tree == NULL){
+	tree = createTree(ptr, size);
+	return;
+    }
+    // placeholder for treenode = null
+    TreeNode* newNode = NULL;
+    TreeNode* currNode = tree;
+    // iterate through left and right sides of tree until placeholder node is not null
+    // call balance after setting currNode's children?
+    while(newNode == NULL) {
+	if(ptr < currNode->low) {
+	    if(currNode->left == NULL) {
+	        newNode = createNode(ptr, size, currNode);
+	        currNode->left = newNode;
+		return;
+	    } else {
+		currNode = currNode->left;
+	    }
+	} else if(ptr > currNode->low) {
+	    if(currNode->right == NULL) {
+    		newNode = createNode(ptr, size, currNode);
+		currNode->right = newNode;
+		return;
+	    } else {
+		currNode = currNode->right;
+    	    }
+	}	    
+    }
 
+    // implement shifting to ensure balanced tree
 }
 
 void removeNode(TreeNode* tree, void* ptr, size_t size) {
