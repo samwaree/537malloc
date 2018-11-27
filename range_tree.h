@@ -4,6 +4,7 @@
 typedef struct TreeNode TreeNode;
 
 TreeNode* createTree(void*, size_t);
+int overlapCheck(TreeNode*, TreeNode*);
 void insertNode(TreeNode*, void*, size_t);
 void removeNode(TreeNode*, void*, size_t);
 
