@@ -16,4 +16,8 @@ int main() {
     tree = insertNode(tree, malloc(sizeof(int) * 10), sizeof(int) * 10);
     tree = insertNode(tree, malloc(sizeof(char) * 200), sizeof(char) * 200);
     printTree(tree);
+    tree = removeNode(tree, ptr3);
+    tree = removeNode(tree, ptr5);
+    tree = removeNode(tree, ptr);
+    printTree(tree);
 }
