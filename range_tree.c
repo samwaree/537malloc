@@ -27,16 +27,25 @@ TreeNode* createNode(void* ptr, size_t size, TreeNode* parent) {
     node->right = NULL;
     node->height = 1;
     return node;
-}
-
-// Don't use anymore.
-TreeNode* createTree(void* ptr, size_t size) {
-    return createNode(ptr, size, NULL);
 }   
 
+/*
+* Returns the max of two ints
+*/
 int max(int a, int b) {
 	if (a > b) return a;
 	else return b;
+}
+
+/*
+* Returns the height of given node; 0 if node is null
+*/
+int getHeight(TreeNode* node) {
+    if (node == NULL) {
+        return 0;
+    } else {
+        return node->height;
+    }
 }
 
 /*
@@ -46,7 +55,47 @@ int balance(TreeNode* node) {
     if (node == NULL) {
         return 0;
     }
-    return node->left->height - node->right->height;
+    return getHeight(node->left) - getHeight(node->right);
+}
+
+/*
+* Returns the max of three void pointers
+*/
+void* maxUpdateHelper3(void* a, void* b, void* c) {
+    void* max = a;
+    if (b > max) {
+        max = b;
+    }
+    if (c > max) {
+        max = c;
+    }
+    return max;
+}
+
+/*
+* Returns the max of two void pointers
+*/
+void* maxUpdateHelper2(void* a, void* b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }    
+}
+
+/*
+* Updates the max value of a node
+*/
+void maxUpdate(TreeNode* node) {
+    if (node->left == NULL && node->right == NULL) {
+        node->max = node->high;
+    } else if (node->left == NULL) {
+        node->max = maxUpdateHelper2(node->high, node->right);
+    } else if (node->right == NULL) {
+        node->max = maxUpdateHelper2(node->high, node->left);
+    } else {
+        node->max =  maxUpdateHelper3(node->high, node->left->max, node->right->max);
+    }
 }
 
 /*
@@ -58,9 +107,13 @@ TreeNode* rotateLeft(TreeNode* node) {
 
     a->left = node;
     node->right = b;
-
-    node->height = max(node->left->height, node->right->height) + 1;
-    a->height = max(a->left->height, a->right->height) + 1;
+    
+    node->height = max(getHeight(node->left), getHeight(node->right)) + 1;
+    a->height = max(getHeight(a->left), getHeight(a->right)) + 1;
+    
+    //Updates the max values so they are correct after rotate
+    maxUpdate(node);
+    maxUpdate(a);
 
     return a;
 }
@@ -75,8 +128,12 @@ TreeNode* rotateRight(TreeNode* node) {
     a->right = node;
     node->left = b;
 
-    node->height = max(node->left->height, node->right->height) + 1;
-    a->height = max(a->left->height, a->right->height) + 1;
+    node->height = max(getHeight(node->left), getHeight(node->right)) + 1;
+    a->height = max(getHeight(a->left), getHeight(a->right)) + 1;
+
+    //Updates the max values so they are correct after rotate
+    maxUpdate(node);
+    maxUpdate(a);
 
     return a;
 }
@@ -105,113 +162,105 @@ int overlapCheck(TreeNode* node1, TreeNode* node2) {
     return 0;
 }
 
-void maxUpdate(TreeNode* node) {
-    if (node->left != NULL && node->left->max > node->max) {
-	node->max = node->left->max;
-    }
-    if (node->right != NULL && node->right->max > node->max) {
-	node->max = node->right->max;
-    }
-}
 
 
 /*
  * This method inserts a TreeNode into a given tree, updates the max value in the tree if needed,
  * and checks for overlap in the tree.
  */
-void insertNode(TreeNode* tree, void* ptr, size_t size, TreeNode* parent) {
+TreeNode* insertNodeHelper(TreeNode* tree, void* ptr, size_t size, TreeNode* parent) {
     // Print error statement here?
-    if(ptr == NULL){
+    if(ptr == NULL) {
 	fprintf(stderr, "Null pointer passed in.");
 	return;
     }
 
     if(tree == NULL){
-	tree = createNode(ptr, size, parent);
+	    tree = createNode(ptr, size, parent);
+        return tree;
     }
 
-/*    TreeNode* newNode = NULL;  // This is a placeholder for the new node being added to the tree.
-    TreeNode* currNode = tree; // This keeps track of the current node being iterated on.
-    
-    // call balance after setting currNode's children?
-    // also have to call overlapping to see if the interval of new node will overlap with root
-    
-    // Iterate through the left and right halves of the tree until a point is reached where
-    // the new node can be added.
-    while(newNode == NULL) {
-	// If the pointer address is less than the current node's address.
-        if(ptr < currNode->low) {
-	    if(currNode->left == NULL) {
-	        newNode = createNode(ptr, size, currNode);
-	        currNode->left = newNode;
-		currNode->left->max = newNode->high;
-	    } else {
-		currNode = currNode->left;
-	    }
-	// If the pointer address is greater than the current node's address.
-	} else if(ptr > currNode->low) {
-	    if(currNode->right == NULL) {
-    		newNode = createNode(ptr, size, currNode);
-		// Check and set new max high
-		if(currNode->max < newNode->high){
-		    currNode->max = newNode->high;
-		}
-		currNode->right = newNode;
-	    } else {
-		// Check and set new max high if needed
-		if(currNode->max < ptr + size) {
-		    currNode->max = ptr + size;
-	        }
-		currNode = currNode->right;
-    	    }
-	}	    
-    }
-*/
     // Update max value
     if (ptr + size > tree->max) {
 	tree->max = ptr + size;
     }
 
     if (ptr < tree->low) {
-	
-	insertNode(tree->left, ptr, size, tree);
+	    tree->left = insertNodeHelper(tree->left, ptr, size, tree);
     } else if (ptr > tree->low) {
-	insertNode(tree->right, ptr, size, tree);
+	    tree->right = insertNodeHelper(tree->right, ptr, size, tree);
     // In the case that the ptrs are equal
     } else {
 	fprintf(stderr, "Tried to insert two pointers of the same value.");
         return;
     }
 
-    tree->height = max(tree->left->height, tree->right->height) + 1;
+    tree->height = max(getHeight(tree->left), getHeight(tree->right)) + 1;
 
     int bal = balance(tree);
     
     // Left Left    
     if (bal > 1 && ptr < tree->left->low) {
-	rotateRight(tree);
+	return rotateRight(tree);
     }
 
     // Right Right
     if (bal < -1 && ptr > tree->right->low) {
-	rotateLeft(tree);
+	return rotateLeft(tree);
     }
 
     // Left Right
     if (bal > 1 && ptr > tree->left->low) {
-	rotateLeft(tree->left);
-	rotateRight(tree);
+	tree->left = rotateLeft(tree->left);
+	return rotateRight(tree);
     }
 
     // Right Left
     if (bal < -1 && ptr < tree->right->low) {
-	rotateRight(tree->right);
-	rotateLeft(tree);
+	tree->right = rotateRight(tree->right);
+	return rotateLeft(tree);
     }
 
-    return;
+    return tree;
+}
+
+/*
+* 
+*/
+TreeNode* insertNode(TreeNode* node, void* ptr, size_t size) {
+    return insertNodeHelper(node, ptr, size, NULL);
 }
 
 void removeNode(TreeNode* tree, void* ptr, size_t size) {
 
 }
+
+/*
+* Prints out the tree in a readable format
+*/
+void printTreeUtil(TreeNode* root, int space) {
+    if (root == NULL) {
+        return;
+    }
+
+    space += 14;
+
+    printTreeUtil(root->right, space);
+
+    printf("\n");
+    for (int i = 14; i < space; i++) {
+        printf(" ");
+    }
+    printf("%p, [%p,%p]\n", root->max, root->low, root->high);
+    
+
+    printTreeUtil(root->left, space);
+}
+
+/*
+* Prints out the tree in a readable format
+*/
+void printTree(TreeNode* tree) {
+    printTreeUtil(tree, 0);
+}
+
