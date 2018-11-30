@@ -16,8 +16,14 @@ int main() {
     tree = insertNode(tree, malloc(sizeof(int) * 10), sizeof(int) * 10);
     tree = insertNode(tree, malloc(sizeof(char) * 200), sizeof(char) * 200);
     printTree(tree);
-    tree = removeNode(tree, ptr3);
-    tree = removeNode(tree, ptr5);
-    tree = removeNode(tree, ptr);
+    printf("Does %p exist in interval: %d\n", ptr5 + 1, existsInInterval(tree, ptr5 + 1));
+
+    printf("Does %p exist in interval: %d\n", ptr5 + 9, existsInInterval(tree, ptr5 + 9));
+    printf("Freed value: %d\n", setFreed(tree, ptr1));
+    printf("Freed value: %d\n", setFreed(tree, ptr1 +1));
+    printf("Freed value: %d\n", setFreed(tree, ptr1));
+    printf("Freed value; %d\n", setFreed(tree, 100));
+    tree = updateOverlaps(tree, ptr1 + 1, sizeof(int));
+    tree = insertNode(tree, ptr1 + 1, sizeof(int));
     printTree(tree);
 }

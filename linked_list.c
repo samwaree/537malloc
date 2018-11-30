@@ -24,7 +24,7 @@ LinkedList* createList() {
     return list;
 }
 
-Node* createNode(void* el) {
+Node* createListNode(void* el) {
     Node* node = malloc(sizeof(node));
     if (node == NULL) {
         fprintf(stderr, "Out of memory.\n");
@@ -44,22 +44,35 @@ void append(LinkedList* list, void* el) {
         fprintf(stderr, "Cannot append NULL element\n");
         return;
     }
-    
+
     if (list->size == 0) {
-        list->head = createNode(el);
+        list->head = createListNode(el);
         list->tail = list->head;
         list->size++;
     } else {
-        list->tail->next = createNode(el);
+        list->tail->next = createListNode(el);
         list->tail = list->tail->next;
-        list->size++;
+        list->size = list->size + 1;
     }
 }
 
 Node* getNext(Node* node) {
-    return node->next;
+    if (node == NULL) {
+        return NULL;
+    }
+    return node->next; 
 }
 
-Node* getElement(Node* node) {
+void* getElement(Node* node) {
+    if (node == NULL) {
+        return NULL;
+    }
     return node->element;
+}
+
+Node* getHead(LinkedList* list) {
+    if (list == NULL) {
+        return NULL;
+    }
+    return list->head;
 }

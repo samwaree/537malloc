@@ -3,13 +3,13 @@ WARNING_FLAGS=-Wall -Wextra
 SCAN_BUILD_DIR = scan-build-out
 
 all: main.o range_tree.o
-	$(CC) -g -o main main.o range_tree.o
+	$(CC) -g -o main main.o range_tree.o linked_list.o
 
 main.o: main.c
 	$(CC) -g $(WARNING_FLAGS) -c main.c
 
 range_tree.o: range_tree.c range_tree.h linked_list.o
-	$(CC) -g $(WARNING_FLAGS) -c range_tree.c
+	$(CC) -g $(WARNING_FLAGS) -c range_tree.c 
 
 linked_list.o: linked_list.c linked_list.h
 	$(CC) -g $(WARNING_FLAGS) -c linked_list.c
