@@ -279,6 +279,7 @@ void copyNode(TreeNode* dest, TreeNode* source) {
 	dest->high = source->high;
 	dest->max = source->max;
 	dest->size = source->size;
+    dest->state = source->state;
 	dest->parent = source->parent;
 	dest->left = source->left;
 	dest->right = source->right;
@@ -329,6 +330,7 @@ TreeNode* removeNodeHelper(TreeNode* tree, TreeNode* node) {
 			curr = getMinNode(tree->right);
 			tree->low = curr->low;
 			tree->high = curr->high;
+            tree->state = curr->state;
 			tree->right = removeNodeHelper(tree->right, curr);
 		}
 	}
