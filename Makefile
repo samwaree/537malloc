@@ -8,8 +8,11 @@ all: main.o range_tree.o
 main.o: main.c
 	$(CC) -g $(WARNING_FLAGS) -c main.c
 
-range_tree.o: range_tree.c range_tree.h
+range_tree.o: range_tree.c range_tree.h linked_list.o
 	$(CC) -g $(WARNING_FLAGS) -c range_tree.c
+
+linked_list.o: linked_list.c linked_list.h
+	$(CC) -g $(WARNING_FLAGS) -c linked_list.c
 
 537malloc.o: 537malloc.c 537malloc.h range_tree.c range_tree.h
 	$(CC) -g $(WARNING_FLAGS) -c 537malloc.c range_tree.c

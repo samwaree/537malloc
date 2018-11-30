@@ -1,11 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "linked_list.h"
+
+enum state_t{freed, allocated};
 
 typedef struct TreeNode {
 	void* low;
 	void* high;
 	void* max;
 	size_t size;
+    enum state_t state;
 	struct TreeNode* parent;
 	struct TreeNode* left;
 	struct TreeNode* right;
@@ -22,12 +26,25 @@ TreeNode* createNode(void* ptr, size_t size, TreeNode* parent) {
 	node->high = ptr + size;
 	node->max = node->high;
 	node->size = size;
+    node->state = allocated;
 	node->parent = parent;
 	node->left = NULL;
 	node->right = NULL;
 	node->height = 1;
 	return node;
 }   
+
+void setFreed(TreeNode* node) {
+    node->state = freed;
+}
+
+int isFreed(TreeNode* node) {
+    if (node->state == freed) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
 
 /*
  * Returns the max of two ints

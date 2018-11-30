@@ -8,5 +8,7 @@ TreeNode* insertNode(TreeNode*, void*, size_t);
 TreeNode* removeNode(TreeNode*, void*);
 TreeNode* search(TreeNode*, void*);
 void printTree(TreeNode*);
+void setFreed(TreeNode*);
+int isFreed(TreeNode*);
 
 #endif
