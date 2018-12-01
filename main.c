@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "range_tree.h"
+#include "537malloc.h"
 
 int main() {
 /*    int* ptr = malloc(sizeof(int));
@@ -25,6 +25,9 @@ int main() {
     printf("Freed value; %d\n", setFreed(tree, 100));
     tree = updateOverlaps(tree, ptr1 + 1, sizeof(int));
     tree = insertNode(tree, ptr1 + 1, sizeof(int));
-    printTree(tree);*/
+    printTree(tree);*/ 
     int* test = malloc537(sizeof(int));
+    char* string = malloc537(sizeof(char) * 20);
+    free537(test);
+    realloc537(string, 0);
 }

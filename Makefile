@@ -13,8 +13,8 @@ linked_list.o: linked_list.c linked_list.h
 537malloc.o: 537malloc.c 537malloc.h range_tree.o
 	$(CC) -g $(WARNING_FLAGS) -c 537malloc.c
 
-test: obj test.c
-	
+test: obj main.c
+	$(CC) -g -o main main.c 537malloc.o range_tree.o linked_list.o
 
 clean:
-	rm *.o
+	rm *.o main
