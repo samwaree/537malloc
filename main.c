@@ -3,7 +3,7 @@
 #include "range_tree.h"
 
 int main() {
-    int* ptr = malloc(sizeof(int));
+/*    int* ptr = malloc(sizeof(int));
     TreeNode* tree = insertNode(tree, ptr, sizeof(int));
     int* ptr1 = malloc(sizeof(int) * 3);
     char* ptr3 = malloc(sizeof(char) * 8);
@@ -25,5 +25,6 @@ int main() {
     printf("Freed value; %d\n", setFreed(tree, 100));
     tree = updateOverlaps(tree, ptr1 + 1, sizeof(int));
     tree = insertNode(tree, ptr1 + 1, sizeof(int));
-    printTree(tree);
+    printTree(tree);*/
+    int* test = malloc537(sizeof(int));
 }
