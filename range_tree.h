@@ -5,14 +5,12 @@
 
 typedef struct TreeNode TreeNode;
 
-int existsInInterval(TreeNode*, void*);
 TreeNode* updateOverlaps(TreeNode*, void*, size_t);
-int overlapCheck(TreeNode*, TreeNode*);
+int isInnerOverlap(TreeNode*, void*, size_t);
 TreeNode* insertNode(TreeNode*, void*, size_t);
 TreeNode* removeNode(TreeNode*, void*);
 TreeNode* search(TreeNode*, void*);
 void printTree(TreeNode*);
 int setFreed(TreeNode*, void*);
-int isFreed(TreeNode*);
 
 #endif
