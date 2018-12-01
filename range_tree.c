@@ -16,6 +16,9 @@ typedef struct TreeNode {
     int height;
 }TreeNode;
 
+/*
+ * This method creates a new TreeNode for insertion into a tree.
+ */
 TreeNode* createNode(void* ptr, size_t size, TreeNode* parent) {
     TreeNode* node = malloc(sizeof(TreeNode));
     if (node == NULL) {
@@ -33,6 +36,21 @@ TreeNode* createNode(void* ptr, size_t size, TreeNode* parent) {
     node->height = 1;
     return node;
 }   
+
+/*
+ * This method copies all the information from one node to another.
+ */
+void copyNode(TreeNode* dest, TreeNode* source) {
+    dest->low = source->low;
+    dest->high = source->high;
+    dest->max = source->max;
+    dest->size = source->size;
+    dest->state = source->state;
+    dest->parent = source->parent;
+    dest->left = source->left;
+    dest->right = source->right;
+    dest->height = source->height;
+}
 
 /*
  * Adds all intervals in the tree that overlap with the given interval to a list
@@ -159,17 +177,15 @@ int balance(TreeNode* node) {
 }
 
 /*
- * Returns the max of three void pointers
+ * Updates the max value of all parents of a node
+ * Runs in O(log(n))
  */
-void* maxUpdateHelper3(void* a, void* b, void* c) {
-    void* max = a;
-    if (b > max) {
-        max = b;
+void updateMaxParent(TreeNode* node) {
+    if (node == NULL) {
+        return;
     }
-    if (c > max) {
-        max = c;
-    }
-    return max;
+    maxUpdate(node);
+    updateMaxParent(node->parent);
 }
 
 /*
@@ -181,6 +197,20 @@ void* maxUpdateHelper2(void* a, void* b) {
     } else {
         return b;
     }    
+}
+
+/*
+ * Returns the max of three void pointers
+ */
+void* maxUpdateHelper3(void* a, void* b, void* c) {
+    void* max = a;
+    if (b > max) {
+        max = b;
+    }
+    if (c > max) {
+        max = c;
+    }
+    return max;
 }
 
 /*
@@ -310,21 +340,6 @@ TreeNode* insertNode(TreeNode* node, void* ptr, size_t size) {
 }
 
 /*
- * This method copies all the information from one node to another.
- */
-void copyNode(TreeNode* dest, TreeNode* source) {
-    dest->low = source->low;
-    dest->high = source->high;
-    dest->max = source->max;
-    dest->size = source->size;
-    dest->state = source->state;
-    dest->parent = source->parent;
-    dest->left = source->left;
-    dest->right = source->right;
-    dest->height = source->height;
-}
-
-/*
  * Returns the left-most child from given subtree.
  */
 TreeNode* getMinNode(TreeNode* node) {
@@ -372,25 +387,33 @@ TreeNode* removeNodeHelper(TreeNode* tree, TreeNode* node) {
             tree->right = removeNodeHelper(tree->right, curr);
         }
     }
+    
+    // In the case that the node removed was the only node in the tree.
     if (tree == NULL) {
         return tree;
     }
+    
+    // Updates the height of the current node and checks balance of the tree.
     tree->height = 1 + max(getHeight(tree->left), getHeight(tree->right));
     int bal = balance(tree);
-
+    
+    // Left Left
     if (bal > 1 && balance(tree->left) >= 0) {
         return rotateRight(tree);
     }
 
+    // Left Right
     if (bal > 1 && balance(tree->left) < 0) {
         tree->left = rotateLeft(tree->left);
         return rotateRight(tree);
     }
 
+    // Right Right
     if (bal < -1 && balance(tree->right) <= 0) {
         return rotateLeft(tree);
     }
 
+    // Right Left
     if (bal < -1 && balance(tree->right) > 0) {
         tree->right = rotateRight(tree->right);
         return rotateLeft(tree);
@@ -433,18 +456,6 @@ void printTreeUtil(TreeNode* root, int space) {
         printf("A: %p, [%p,%p]\n", root->max, root->low, root->high);
     }
     printTreeUtil(root->left, space);
-}
-
-/*
- * Updates the max value of all parents of a node
- * Runs in O(log(n))
- */
-void updateMaxParent(TreeNode* node) {
-    if (node == NULL) {
-        return;
-    }
-    maxUpdate(node);
-    updateMaxParent(node->parent);
 }
 
 /*
