@@ -53,23 +53,34 @@ void copyNode(TreeNode* dest, TreeNode* source) {
 }
 
 /*
+ * Returns true if the node is freed
+ */
+int isFreed(TreeNode* node) {
+    if (node->state == freed) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/*
  * Adds all intervals in the tree that overlap with the given interval to a list
  * Runs in O(log(n)) time
  */
-void findOverlaps(TreeNode* node, void* low, void* high, LinkedList* list) {
+LinkedList* findOverlaps(TreeNode* node, void* low, void* high, LinkedList* list) {
     if (node == NULL) {
-        return;
+        return list;
     }       
 
     if (node->low <= high && low <= node->high) {
-        append(list, node);
+        list = append(list, node);
     }
 
     if (node->left != NULL && node->left->max >= low) {
-        findOverlaps(node->left, low, high, list);
+        return findOverlaps(node->left, low, high, list);
     }
 
-    findOverlaps(node->right, low, high, list);
+    return findOverlaps(node->right, low, high, list);
 }
 
 /*
@@ -77,28 +88,21 @@ void findOverlaps(TreeNode* node, void* low, void* high, LinkedList* list) {
 * allocated interval in the tree
 * Returns false otherwise
 */
-int isInnerOverlap(TreeNode* tree, void* ptr, size_t size) {
-    if (ptr == NULL) {
+int isInnerOverlap(TreeNode* node, void* ptr, size_t size) {
+    if (node == NULL) {
         return 0;
     }
 
-    LinkedList* list = createList();
-    findOverlaps(tree, ptr, ptr + size, list);
-
-    int flag = 0;
-    Node* curr = getHead(list);
-    while (curr != NULL) {
-        TreeNode* node = getElement(curr);
-        if (node->low <= ptr && (ptr + size) <= node->high 
-                && node->state == allocated) {
-            flag = 1;
-        }
-        Node* temp = curr;
-        curr = getNext(curr);
-        free(temp);
+    if (node->low <= ptr && (ptr + size) <= node->high && !isFreed(node)) {
+        return 1;
     }
-    free(list);
-    return flag;
+
+
+    if (node->left != NULL && node->left->max >= ptr) {
+        return isInnerOverlap(node->left, ptr, size);
+    }
+
+    return isInnerOverlap(node->right, ptr, size);
 }
 
 /*
@@ -117,17 +121,6 @@ TreeNode* search(TreeNode* root, void* ptr) {
         return search(root->right, ptr);
     } else {
         return root;
-    }
-}
-
-/*
- * Returns true if the node is freed
- */
-int isFreed(TreeNode* node) {
-    if (node->state == freed) {
-        return 1;
-    } else {
-        return 0;
     }
 }
 
@@ -469,8 +462,8 @@ TreeNode* removeNode(TreeNode* root, void* ptr) {
  * Else, update the high value of freed node to the ptr
  */
 TreeNode* updateOverlaps(TreeNode* tree, void* ptr, size_t size) {
-    LinkedList* list = createList();
-    findOverlaps(tree, ptr, ptr + size, list);
+    LinkedList* list = NULL;
+    list = findOverlaps(tree, ptr, ptr + size, list);
 
     Node* curr = getHead(list);
     while(curr != NULL) {

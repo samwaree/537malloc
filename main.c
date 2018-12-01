@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "537malloc.h"
+#include "linked_list.h"
 
 int main() {
 /*    int* ptr = malloc(sizeof(int));

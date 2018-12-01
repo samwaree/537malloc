@@ -35,25 +35,23 @@ Node* createListNode(void* el) {
     return node;
 }
 
-void append(LinkedList* list, void* el) {
-    if (list == NULL) {
-        fprintf(stderr, "List is null.\n");
-        return;   
-    }
+LinkedList* append(LinkedList* list, void* el) {
     if (el == NULL) {
         fprintf(stderr, "Cannot append NULL element\n");
-        return;
+        return NULL;
     }
 
-    if (list->size == 0) {
+    if (list == NULL) {
+        list = createList();
         list->head = createListNode(el);
         list->tail = list->head;
-        list->size++;
+        list->size = list->size + 1;
     } else {
         list->tail->next = createListNode(el);
         list->tail = list->tail->next;
         list->size = list->size + 1;
     }
+    return list;
 }
 
 Node* getNext(Node* node) {
