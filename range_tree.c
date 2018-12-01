@@ -73,27 +73,6 @@ void findOverlaps(TreeNode* node, void* low, void* high, LinkedList* list) {
 }
 
 /*
- * Returns true if the ptr exists in any interval in the tree
- * Returns false otherwise
- * Runs in O(log(n)) time
- */
-int existsInInterval(TreeNode* root, void* ptr) {
-    if (root == NULL) {
-        return 0;
-    }
-
-    if (root->low <= ptr && root->high >= ptr) {
-        return 1;
-    }
-
-    if (root->left != NULL && root->left->max >= ptr) {
-        return existsInInterval(root->left, ptr);
-    }
-
-    return existsInInterval(root->right, ptr);
-}
-
-/*
  * Searches for a given node in the tree.
  */
 TreeNode* search(TreeNode* root, void* ptr) {
@@ -145,6 +124,59 @@ int setFreed(TreeNode* tree, void* ptr) {
             return -3;
         }
     }
+}
+
+/*
+ * Returns true if the ptr exists in any interval in the tree
+ * Returns false otherwise
+ * Runs in O(log(n)) time
+ */
+int existsInInterval(TreeNode* root, void* ptr) {
+    if (root == NULL) {
+        return 0;
+    }
+
+    if (root->low <= ptr && root->high >= ptr) {
+        return 1;
+    }
+
+    if (root->left != NULL && root->left->max >= ptr) {
+        return existsInInterval(root->left, ptr);
+    }
+
+    return existsInInterval(root->right, ptr);
+}
+
+/*
+ * Updates the intervals to fit the guidelines of malloc
+ * If the first byte of a freed node is overlapped, remove the node
+ * Else, update the high value of freed node to the ptr
+ */
+TreeNode* updateOverlaps(TreeNode* tree, void* ptr, size_t size) {
+    LinkedList* list = createList();
+    findOverlaps(tree, ptr, ptr + size, list);
+
+    Node* curr = getHead(list);
+    while(curr != NULL) {
+        TreeNode* node = getElement(curr);
+        if (!isFreed(node)) {
+            fprintf(stderr, "Malloc/Realloc has failed.");
+            exit(-1);
+        }
+        else if (ptr <= node->low && isFreed(node)) {
+            tree = removeNodeHelper(tree, node);
+        } else {
+            if (isFreed(node)) {
+                node->high = ptr;
+                updateMaxParent(node->parent);
+            }
+        }
+        Node* temp = curr;
+        curr = getNext(curr);
+        free(temp);
+    }
+    free(list);
+    return tree;
 }
 
 /*
@@ -303,8 +335,8 @@ TreeNode* insertNodeHelper(TreeNode* tree, void* ptr, size_t size, TreeNode* par
         return tree;
     }
 
+    // Updates the height of the current node and checks the balance of the tree.
     tree->height = max(getHeight(tree->left), getHeight(tree->right)) + 1;
-
     int bal = balance(tree);
 
     // Left Left    
@@ -456,34 +488,6 @@ void printTreeUtil(TreeNode* root, int space) {
         printf("A: %p, [%p,%p]\n", root->max, root->low, root->high);
     }
     printTreeUtil(root->left, space);
-}
-
-/*
- * Updates the intervals to fit the guidelines of malloc
- * If the first byte of a freed node is overlapped, remove the node
- * Else, update the high value of freed node to the ptr
- */
-TreeNode* updateOverlaps(TreeNode* tree, void* ptr, size_t size) {
-    LinkedList* list = createList();
-    findOverlaps(tree, ptr, ptr + size, list);
-
-    Node* curr = getHead(list);
-    while(curr != NULL) {
-        TreeNode* node = getElement(curr);
-        if (ptr <= node->low && isFreed(node)) {
-            tree = removeNodeHelper(tree, node);
-        } else {
-            if (isFreed(node)) {
-                node->high = ptr;
-                updateMaxParent(node->parent);
-            }
-        }
-        Node* temp = curr;
-        curr = getNext(curr);
-        free(temp);
-    }
-    free(list);
-    return tree;
 }
 
 /*
