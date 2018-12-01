@@ -25,7 +25,7 @@ LinkedList* createList() {
 }
 
 Node* createListNode(void* el) {
-    Node* node = malloc(sizeof(node));
+    Node* node = malloc(sizeof(Node));
     if (node == NULL) {
         fprintf(stderr, "Out of memory.\n");
         exit(-1);

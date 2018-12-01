@@ -73,6 +73,35 @@ void findOverlaps(TreeNode* node, void* low, void* high, LinkedList* list) {
 }
 
 /*
+* Return true if the given interval exists completely inside an 
+* allocated interval in the tree
+* Returns false otherwise
+*/
+int isInnerOverlap(TreeNode* tree, void* ptr, size_t size) {
+    if (ptr == NULL) {
+        return 0;
+    }
+
+    LinkedList* list = createList();
+    findOverlaps(tree, ptr, ptr + size, list);
+
+    int flag = 0;
+    Node* curr = getHead(list);
+    while (curr != NULL) {
+        TreeNode* node = getElement(curr);
+        if (node->low <= ptr && (ptr + size) <= node->high 
+                && node->state == allocated) {
+            flag = 1;
+        }
+        Node* temp = curr;
+        curr = getNext(curr);
+        free(temp);
+    }
+    free(list);
+    return flag;
+}
+
+/*
  * Searches for a given node in the tree.
  */
 TreeNode* search(TreeNode* root, void* ptr) {
@@ -387,16 +416,16 @@ TreeNode* removeNodeHelper(TreeNode* tree, TreeNode* node) {
             tree->right = removeNodeHelper(tree->right, curr);
         }
     }
-    
+
     // In the case that the node removed was the only node in the tree.
     if (tree == NULL) {
         return tree;
     }
-    
+
     // Updates the height of the current node and checks balance of the tree.
     tree->height = 1 + max(getHeight(tree->left), getHeight(tree->right));
     int bal = balance(tree);
-    
+
     // Left Left
     if (bal > 1 && balance(tree->left) >= 0) {
         return rotateRight(tree);

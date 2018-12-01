@@ -16,5 +16,8 @@ linked_list.o: linked_list.c linked_list.h
 test: obj main.c
 	$(CC) -g -o main main.c 537malloc.o range_tree.o linked_list.o
 
+scan-build: clean
+	scan-build -o $(SCAN_BUILD_DIR) make
+
 clean:
-	rm *.o main
+	rm *.o

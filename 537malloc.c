@@ -15,7 +15,7 @@ void* malloc537(size_t size) {
         fprintf(stderr, "Warning: you have allocated a block of size 0.\n");
     } 
     tree = insertNode(tree, ptr, size);
-    printTree(tree);
+    //printTree(tree);
     return ptr;
 }
 
@@ -34,7 +34,7 @@ void free537(void* ptr) {
             fprintf(stderr, "Error: pointer was not allocated by malloc537.\n");
             exit(-1);
     }
-    printTree(tree);
+    //printTree(tree);
 }
 
 void* realloc537(void* ptr, size_t size) {
@@ -50,10 +50,14 @@ void* realloc537(void* ptr, size_t size) {
     void* new_ptr = realloc(ptr, size);
     updateOverlaps(tree, new_ptr, size);
     tree = insertNode(tree, new_ptr, size);
-    printTree(tree);
+    //printTree(tree);
     return new_ptr;
 }
 
 void memcheck537(void* ptr, size_t size) {
-    
+    if (!isInnerOverlap(tree, ptr, size)) {
+        fprintf(stderr, "Error: Range was not allocated by malloc537() / was already freed.\n");
+        fprintf(stderr, "Starting address: %p\nEnding address: %p\n", ptr, ptr + size);
+        exit(-1);
+    }    
 }

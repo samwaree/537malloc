@@ -28,6 +28,6 @@ int main() {
     printTree(tree);*/ 
     int* test = malloc537(sizeof(int));
     char* string = malloc537(sizeof(char) * 20);
-    free537(test);
-    realloc537(string, 0);
+    memcheck537(test, sizeof(int));
+    memcheck537(test + 10000, sizeof(int));
 }
