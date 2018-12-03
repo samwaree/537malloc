@@ -84,10 +84,10 @@ LinkedList* findOverlaps(TreeNode* node, void* low, void* high, LinkedList* list
 }
 
 /*
-* Return true if the given interval exists completely inside an 
-* allocated interval in the tree
-* Returns false otherwise
-*/
+ * Return true if the given interval exists completely inside an 
+ * allocated interval in the tree
+ * Returns false otherwise
+ */
 int isInnerOverlap(TreeNode* node, void* ptr, size_t size) {
     if (node == NULL) {
         return 0;
@@ -452,7 +452,9 @@ TreeNode* removeNode(TreeNode* root, void* ptr) {
     if (node == NULL) {
         return root;
     } else {
-        return removeNodeHelper(root, node);
+        root = removeNodeHelper(root, node);
+        maxUpdate(root);
+        return root;
     }
 }
 
@@ -474,10 +476,11 @@ TreeNode* updateOverlaps(TreeNode* tree, void* ptr, size_t size) {
         }
         else if (ptr <= node->low && isFreed(node)) {
             tree = removeNodeHelper(tree, node);
+            maxUpdate(tree);
         } else {
             if (isFreed(node)) {
                 node->high = ptr;
-                updateMaxParent(node->parent);
+                updateMaxParent(node);
             }
         }
         Node* temp = curr;
