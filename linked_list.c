@@ -1,3 +1,6 @@
+// Written by:
+// Logan Mahan, NetID: lmahan, CSID: mahan
+// Sam Ware, NetID: sware2, CSID: sware
 #include <stdlib.h>
 #include <stdio.h>
 

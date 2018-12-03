@@ -1,9 +1,16 @@
+// Written by:
+// Logan Mahan, NetID: lmahan, CSID: mahan
+// Sam Ware, NetID: sware2, CSID: sware
 #include <stdlib.h>
 #include <stdio.h>
 #include "range_tree.h"
 
+// Self-balancing interval tree containing intervals returned by malloc/realloc
 TreeNode* tree = NULL;
 
+/*
+ * Safely allocates a pointer of a given size
+ */
 void* malloc537(size_t size) {
     void* ptr = malloc(size);
     if (ptr == NULL) {
@@ -49,6 +56,9 @@ void* realloc537(void* ptr, size_t size) {
 
     tree = removeNode(tree, ptr);
     void* new_ptr = realloc(ptr, size);
+    if (new_ptr == NULL) {
+        return NULL;
+    }
     updateOverlaps(tree, new_ptr, size);
     tree = insertNode(tree, new_ptr, size);
     return new_ptr;
@@ -56,12 +66,9 @@ void* realloc537(void* ptr, size_t size) {
 
 void memcheck537(void* ptr, size_t size) {
     if (!isInnerOverlap(tree, ptr, size)) {
-        fprintf(stderr, "Error: Range was not allocated by malloc537() / was already freed.\n");
+        fprintf(stderr, "Error: User cannot access this range of memory.\n");
         fprintf(stderr, "Starting address: %p\nEnding address: %p\n", ptr, ptr + size);
         exit(-1);
     }    
 }
 
-void printRangeTree() {
-    printTree(tree);
-}
