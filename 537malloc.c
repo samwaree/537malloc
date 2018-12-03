@@ -9,7 +9,7 @@
 TreeNode* tree = NULL;
 
 /*
- * Safely allocates a pointer of a given size
+ * Safely allocates a pointer of a given size and does appropriate error checking.
  */
 void* malloc537(size_t size) {
     void* ptr = malloc(size);
@@ -24,6 +24,9 @@ void* malloc537(size_t size) {
     return ptr;
 }
 
+/*
+ * Safely frees a given pointer and does appropriate error checking.
+ */
 void free537(void* ptr) {
     switch(setFreed(tree, ptr)) {
         case 0:
@@ -45,6 +48,10 @@ void free537(void* ptr) {
     }
 }
 
+/*
+ * This method reallocates the memory indicated by the pointer to a new location plus the indicated
+ * size.
+ */
 void* realloc537(void* ptr, size_t size) {
     if (ptr == NULL) {
         return malloc537(size);
@@ -64,6 +71,10 @@ void* realloc537(void* ptr, size_t size) {
     return new_ptr;
 }
 
+/*
+ * Checks to see if the user has access to the memory indicated by the pointer through the pointer
+ * plus the indicated size.
+ */
 void memcheck537(void* ptr, size_t size) {
     if (!isInnerOverlap(tree, ptr, size)) {
         fprintf(stderr, "Error: User cannot access this range of memory.\n");
