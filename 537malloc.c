@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "range_tree.h"
 
-// Self-balancing interval tree containing intervals returned by malloc/realloc
+// Self-balancing interval tree containing intervals returned by malloc/realloc.
 TreeNode* tree = NULL;
 
 /*
