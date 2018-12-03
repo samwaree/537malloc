@@ -15,6 +15,9 @@ typedef struct LinkedList{
     int size;
 }LinkedList;
 
+/*
+ * Creates an empty LinkedList
+ */
 LinkedList* createList() {
     LinkedList* list =  malloc(sizeof(LinkedList));
     if (list == NULL) {
@@ -27,6 +30,9 @@ LinkedList* createList() {
     return list;
 }
 
+/*
+ * Creates a node from the given element
+ */
 Node* createListNode(void* el) {
     Node* node = malloc(sizeof(Node));
     if (node == NULL) {
@@ -38,6 +44,9 @@ Node* createListNode(void* el) {
     return node;
 }
 
+/*
+ * Appends a node to the end of a given list
+ */
 LinkedList* append(LinkedList* list, void* el) {
     if (el == NULL) {
         fprintf(stderr, "Cannot append NULL element\n");
@@ -57,6 +66,9 @@ LinkedList* append(LinkedList* list, void* el) {
     return list;
 }
 
+/*
+ * Gets the next node in a list
+ */
 Node* getNext(Node* node) {
     if (node == NULL) {
         return NULL;
@@ -64,6 +76,9 @@ Node* getNext(Node* node) {
     return node->next; 
 }
 
+/*
+ * Gets the element from a node
+ */
 void* getElement(Node* node) {
     if (node == NULL) {
         return NULL;
@@ -71,6 +86,9 @@ void* getElement(Node* node) {
     return node->element;
 }
 
+/*
+ * Gets the head from a LinkedList
+ */
 Node* getHead(LinkedList* list) {
     if (list == NULL) {
         return NULL;
