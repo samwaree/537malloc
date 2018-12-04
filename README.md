@@ -5,12 +5,14 @@ Safe malloc/free written for CS537: Introduction to Operating Systems
 This program was designed to ensure the proper allocation and freeing of memory using the  malloc, realloc, and free commands. The following web pages were used as references while building this program:
 
 These were used to gain an understanding of how to correctly build an interval tree:
+
 https://en.wikipedia.org/wiki/Interval_tree
 
 https://www.geeksforgeeks.org/interval-tree/
 
 
-These were used to correcly implement a self-balancing binary search tree.
+These were used to correcly implement a self-balancing binary search tree:
+
 https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
 
 https://www.geeksforgeeks.org/avl-tree-set-2-deletion/
