@@ -23,7 +23,7 @@ This file contains the main methods utilized in this library. The malloc537 and 
 
 ## **Range Tree**
 This file contains a custom TreeNode struct that is used to keep track of memory allocation and other nodes sorted in a self-balancing binary search tree. The main methods utilized in this file are insertNode and removeNode methods. These properly add and remove, respectively, a node (whose contents keep track of memory allocated by the user) from the binary search tree and call appropriate balancing methods to keep the height of the tree relatively uniform.
-**Note:** The tree searches, deletes, and reallocates in order O(logn) which is why it is efficient. The search, however, runs in O(logn + k) where k is the number of intervals it overlaps with.
+**Note:** The tree inserts and deletes in order O(log(n)) which is why it is efficient. The search, however, runs in O(log(n) + k) where k is the number of intervals it overlaps with.
 
 ## **Linked List**
 This file contains a custom LinkedList struct as well as various methods used to create a linked list of nodes.
